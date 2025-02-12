@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BookStoreDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BookStore"));
+    options.UseSqlServer(connectionString: builder.Configuration.GetConnectionString("BookStore"));
 });
 
 var app = builder.Build();
