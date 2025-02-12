@@ -21,9 +21,9 @@ namespace BookStore.API.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAllBooks()
+        public async Task<IActionResult> GetAllBooks()
         {
-            var books = bookRepository.GetAll();
+            var books = await bookRepository.GetAllAsync();
 
             var booksDTO = mapper.Map<List<models.DTO.Book>>(books);
             return Ok(booksDTO);

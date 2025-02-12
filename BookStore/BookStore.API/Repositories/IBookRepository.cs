@@ -4,6 +4,6 @@ namespace BookStore.API.Repositories
 {
     public interface IBookRepository
     {
-        public IEnumerable<Book> GetAll();
+        public Task<IEnumerable<Book>> GetAllAsync();
     }
 }

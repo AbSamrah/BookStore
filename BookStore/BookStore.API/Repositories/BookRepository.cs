@@ -1,5 +1,6 @@
 ﻿using BookStore.API.Data;
 using BookStore.API.models.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.API.Repositories
 {
@@ -11,9 +12,9 @@ namespace BookStore.API.Repositories
             this.bookStoreDbContext = bookStoreDbContext;
         }
 
-        public IEnumerable<Book> GetAll()
+        public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return bookStoreDbContext.Books.ToList();
+            return await bookStoreDbContext.Books.ToListAsync();
         }
 
     }
