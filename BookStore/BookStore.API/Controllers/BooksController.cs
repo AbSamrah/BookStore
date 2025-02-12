@@ -31,6 +31,7 @@ namespace BookStore.API.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
+        [ActionName("GetBookAsync")]
         public async Task<IActionResult> GetBookAsync(Guid id)
         {
             var book = await bookRepository.GetByIdAsync(id);
@@ -54,8 +55,16 @@ namespace BookStore.API.Controllers
 
             book = await bookRepository.AddBookAsync(book);
 
-            var bookDTO = mapper.Map<models.DTO.Book>(book);
-            return Ok(bookDTO);
+            var bookDTO = new models.DTO.Book()
+            {
+                Id = book.Id,
+                Name = book.Name,
+                CreatedDate = book.CreatedDate,
+                AuthorName = book.AuthorName,
+                PriceInSYR = book.PriceInSYR
+            };
+
+            return CreatedAtAction(nameof(GetBookAsync), new { id = bookDTO.Id }, bookDTO);
         }
 
         [HttpDelete]
