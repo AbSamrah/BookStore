@@ -28,5 +28,34 @@ namespace BookStore.API.Controllers
             var booksDTO = mapper.Map<List<models.DTO.Book>>(books);
             return Ok(booksDTO);
         }
+
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetBookAsync(Guid id)
+        {
+            var book = await bookRepository.GetByIdAsync(id);
+            if(book == null)
+            {
+                return NotFound();
+            }
+            var bookDTO = mapper.Map<models.DTO.Book>(book);
+            return Ok(bookDTO);
+        }
+        [HttpPut]
+        public async Task<IActionResult> AddBookAsync(models.DTO.AddBookRequest addBookRequest)
+        {
+            var book = new models.Domain.Book()
+            {
+                Name = addBookRequest.Name,
+                AuthorName = addBookRequest.AuthorName,
+                CreatedDate = addBookRequest.CreatedDate,
+                PriceInSYR = addBookRequest.PriceInSYR
+            };
+
+            book = await bookRepository.AddBookAsync(book);
+
+            var bookDTO = mapper.Map<models.DTO.Book>(book);
+            return Ok(bookDTO);
+        }
     }
 }
