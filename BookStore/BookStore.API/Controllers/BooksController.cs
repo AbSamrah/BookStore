@@ -41,7 +41,7 @@ namespace BookStore.API.Controllers
             var bookDTO = mapper.Map<models.DTO.Book>(book);
             return Ok(bookDTO);
         }
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> AddBookAsync(models.DTO.AddBookRequest addBookRequest)
         {
             var book = new models.Domain.Book()
@@ -53,6 +53,43 @@ namespace BookStore.API.Controllers
             };
 
             book = await bookRepository.AddBookAsync(book);
+
+            var bookDTO = mapper.Map<models.DTO.Book>(book);
+            return Ok(bookDTO);
+        }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteBookAsync(Guid id)
+        {
+            var book = await bookRepository.DeleteAsync(id);
+
+            if(book == null)
+            {
+                return NotFound();
+            }
+
+            var bookDTO = mapper.Map<models.DTO.Book>(book);
+            return Ok(bookDTO);
+        }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, models.DTO.UpdateBookRequest updateBookRequest)
+        {
+            var book = new models.Domain.Book()
+            {
+                Name = updateBookRequest.Name,
+                CreatedDate = updateBookRequest.CreatedDate,
+                AuthorName = updateBookRequest.AuthorName,
+                PriceInSYR = updateBookRequest.PriceInSYR
+            };
+
+            book = await bookRepository.UpdateAsync(id, book);
+            if(book == null)
+            {
+                return NotFound();
+            }
 
             var bookDTO = mapper.Map<models.DTO.Book>(book);
             return Ok(bookDTO);

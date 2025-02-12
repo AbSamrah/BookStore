@@ -25,8 +25,34 @@ namespace BookStore.API.Repositories
         {
             book.Id = Guid.NewGuid();
             await bookStoreDbContext.AddAsync(book);
-            bookStoreDbContext.SaveChanges();
+            await bookStoreDbContext.SaveChangesAsync();
             return book;
+        }
+        public async Task<Book> DeleteAsync(Guid id)
+        {
+            var book = await bookStoreDbContext.Books.FirstOrDefaultAsync(x=>x.Id == id);
+            if(book == null)
+            {
+                return null;
+            }
+            bookStoreDbContext.Books.Remove(book);
+            await bookStoreDbContext.SaveChangesAsync();
+            return book;
+        }
+        public async Task<Book> UpdateAsync(Guid id, Book book)
+        {
+            var existingBook = await bookStoreDbContext.Books.FirstOrDefaultAsync(x=>x.Id == id);
+            if(existingBook == null)
+            {
+                return null;
+            }
+            existingBook.Name = book.Name;
+            existingBook.PriceInSYR = book.PriceInSYR;
+            existingBook.CreatedDate = book.CreatedDate;
+            existingBook.AuthorName = book.AuthorName;
+
+            await bookStoreDbContext.SaveChangesAsync();
+            return existingBook;
         }
     }
 }
