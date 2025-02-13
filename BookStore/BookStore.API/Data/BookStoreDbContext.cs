@@ -11,5 +11,6 @@ namespace BookStore.API.Data
         }
         public DbSet<Book> Books { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<SinglePurchase> SinglePurchases { get; set; }
     }
 }

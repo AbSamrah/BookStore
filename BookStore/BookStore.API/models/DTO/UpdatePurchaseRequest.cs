@@ -1,6 +1,6 @@
 ﻿namespace BookStore.API.models.DTO
 {
-    public class AddPurchaseRequest
+    public class UpdatePurchaseRequest
     {
         public DateTime PurchaseTime { get; set; }
     }

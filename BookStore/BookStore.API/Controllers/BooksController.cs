@@ -55,7 +55,7 @@ namespace BookStore.API.Controllers
 
             book = await bookRepository.AddBookAsync(book);
 
-            var bookDTO = new models.DTO.Book()
+            var bookDTO = new models.DTO.Book
             {
                 Id = book.Id,
                 Name = book.Name,

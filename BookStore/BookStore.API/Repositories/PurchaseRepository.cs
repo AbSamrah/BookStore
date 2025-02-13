@@ -47,5 +47,17 @@ namespace BookStore.API.Repositories
             }
             return purchase;
         }
+
+        public async Task<Purchase> UpdateAsync(Guid id, Purchase purchase)
+        {
+            var existingPurchase = await bookStoreDbContext.Purchases.FirstOrDefaultAsync(x => x.Id == id);
+            if(existingPurchase == null)
+            {
+                return null;
+            }
+            existingPurchase.SinglePurchases = purchase.SinglePurchases;
+            existingPurchase.PurchaseTime = purchase.PurchaseTime;
+            return existingPurchase;
+        }
     }
 }

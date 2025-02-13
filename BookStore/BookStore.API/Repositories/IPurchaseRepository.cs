@@ -8,5 +8,6 @@ namespace BookStore.API.Repositories
         public Task<Purchase> GetByIdAsync(Guid id);
         public Task<Purchase> AddPurchaseAsync(Purchase purchase);
         public Task<Purchase> DeleteAsync(Guid id);
+        public Task<Purchase> UpdateAsync(Guid id, Purchase purchase);
     }
 }

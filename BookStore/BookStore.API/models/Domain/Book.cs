@@ -7,5 +7,6 @@
         public DateTime CreatedDate { get; set; }
         public string AuthorName { get; set; }
         public double PriceInSYR { get; set; }
+        public IEnumerable<SinglePurchase> singlePurchases { get; set; }
     }
 }
