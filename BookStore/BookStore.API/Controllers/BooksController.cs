@@ -84,7 +84,7 @@ namespace BookStore.API.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> UpdateBookAsync(Guid id, models.DTO.UpdateBookRequest updateBookRequest)
+        public async Task<IActionResult> UpdateBookAsync([FromRoute] Guid id,[FromBody] models.DTO.UpdateBookRequest updateBookRequest)
         {
             var book = new models.Domain.Book()
             {

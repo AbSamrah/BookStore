@@ -79,7 +79,7 @@ namespace BookStore.API.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> UpdatePurchaseAsync(Guid id, models.DTO.UpdatePurchaseRequest updatePurchaseRequest)
+        public async Task<IActionResult> UpdatePurchaseAsync([FromRoute] Guid id,[FromBody] models.DTO.UpdatePurchaseRequest updatePurchaseRequest)
         {
             var purchase = new Purchase()
             {
