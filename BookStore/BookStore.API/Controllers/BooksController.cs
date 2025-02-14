@@ -45,6 +45,11 @@ namespace BookStore.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBookAsync(models.DTO.AddBookRequest addBookRequest)
         {
+            if (!ValidateAddBookAsync(addBookRequest))
+            {
+                return BadRequest(ModelState);
+            }
+
             var book = new models.Domain.Book()
             {
                 Name = addBookRequest.Name,
@@ -103,5 +108,80 @@ namespace BookStore.API.Controllers
             var bookDTO = mapper.Map<models.DTO.Book>(book);
             return Ok(bookDTO);
         }
+
+
+        #region Private methods
+        private bool ValidateAddBookAsync(models.DTO.AddBookRequest addBookRequest)
+        {
+            if (addBookRequest == null)
+            {
+                ModelState.AddModelError(nameof(addBookRequest), $"Cannot be null.");
+                return false;
+            }
+
+            if (String.IsNullOrWhiteSpace(addBookRequest.Name)){
+                ModelState.AddModelError(nameof(addBookRequest.Name), $"{nameof(addBookRequest.Name)} cannot be null or empty or white space.");
+            }
+
+            if (String.IsNullOrWhiteSpace(addBookRequest.AuthorName)){
+                ModelState.AddModelError(nameof(addBookRequest.AuthorName), $"{nameof(addBookRequest.AuthorName)} cannot be null or empty or white space.");
+            }
+
+            if(addBookRequest.PriceInSYR < 0)
+            {
+                ModelState.AddModelError(nameof(addBookRequest.PriceInSYR), $"{nameof(addBookRequest.PriceInSYR)} cannot be negative.");
+            }
+
+            if(addBookRequest.CreatedDate > DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(addBookRequest.CreatedDate), $"{nameof(addBookRequest.CreatedDate)} cannot be after now.");
+            }
+
+            if(ModelState.Count > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateUpdateBookAsync(models.DTO.UpdateBookRequest updateBookRequest)
+        {
+            if (updateBookRequest == null)
+            {
+                ModelState.AddModelError(nameof(updateBookRequest), $"Cannot be null.");
+                return false;
+            }
+
+            if (String.IsNullOrWhiteSpace(updateBookRequest.Name))
+            {
+                ModelState.AddModelError(nameof(updateBookRequest.Name), $"{nameof(updateBookRequest.Name)} cannot be null or empty or white space.");
+            }
+
+            if (String.IsNullOrWhiteSpace(updateBookRequest.AuthorName))
+            {
+                ModelState.AddModelError(nameof(updateBookRequest.AuthorName), $"{nameof(updateBookRequest.AuthorName)} cannot be null or empty or white space.");
+            }
+
+            if (updateBookRequest.PriceInSYR < 0)
+            {
+                ModelState.AddModelError(nameof(updateBookRequest.PriceInSYR), $"{nameof(updateBookRequest.PriceInSYR)} cannot be negative.");
+            }
+
+            if (updateBookRequest.CreatedDate > DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(updateBookRequest.CreatedDate), $"{nameof(updateBookRequest.CreatedDate)} cannot be after now.");
+            }
+
+            if (ModelState.Count > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        
+        #endregion
     }
 }
