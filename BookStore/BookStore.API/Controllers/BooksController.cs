@@ -115,7 +115,7 @@ namespace BookStore.API.Controllers
         {
             if (addBookRequest == null)
             {
-                ModelState.AddModelError(nameof(addBookRequest), $"Cannot be null.");
+                ModelState.AddModelError(nameof(addBookRequest), $"{nameof(addBookRequest)} cannot be null.");
                 return false;
             }
 
