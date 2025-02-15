@@ -49,6 +49,11 @@ namespace BookStore.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSinglePurchaseAsync(models.DTO.AddSinglePurchaseRequest addSinglePurchaseRequest)
         {
+            if (!await ValidateAddSinglePurchaseAsync(addSinglePurchaseRequest))
+            {
+                return BadRequest(ModelState);
+            }
+
             var singlePurchase = new SinglePurchase()
             {
                 BookId = addSinglePurchaseRequest.BookId,
@@ -81,6 +86,10 @@ namespace BookStore.API.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> UpdateSinglePurchaseAsync(Guid id, models.DTO.UpdateSinglePurchaseRequest updateSinglePurchaseRequest)
         {
+            if (!await ValidateUpdateSinglePurchaseAsync(updateSinglePurchaseRequest))
+            {
+                return BadRequest(ModelState);
+            }
             var singlePurchase = new SinglePurchase
             {
                 Quantity = updateSinglePurchaseRequest.Quantity,
@@ -105,7 +114,7 @@ namespace BookStore.API.Controllers
         {
             if (addSinglePurchaseRequest == null)
             {
-                ModelState.AddModelError(nameof(addSinglePurchaseRequest), { $"{nameof(addSinglePurchaseRequest)} cannot be null."});
+                ModelState.AddModelError(nameof(addSinglePurchaseRequest), $"{nameof(addSinglePurchaseRequest)} cannot be null.");
                 return false;
             }
 
@@ -116,15 +125,46 @@ namespace BookStore.API.Controllers
 
             if(await bookRepository.GetByIdAsync(addSinglePurchaseRequest.BookId) == null)
             {
-                ModelState.AddModelError(nameof(addSinglePurchaseRequest.BookId), $"There is no book with this Id.");
+                ModelState.AddModelError(nameof(addSinglePurchaseRequest.BookId), " There is no book with this Id.");
             }
 
             if(await purchaseRepository.GetByIdAsync(addSinglePurchaseRequest.PurchaseId) == null)
             {
-                ModelState.AddModelError(nameof(addSinglePurchaseRequest.PurchaseId), $"There is no purchase with this Id.");
+                ModelState.AddModelError(nameof(addSinglePurchaseRequest.PurchaseId), "There is no purchase with this Id.");
             }
 
             if(ModelState.Count > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> ValidateUpdateSinglePurchaseAsync(models.DTO.UpdateSinglePurchaseRequest updateSinglePurchaseRequest)
+        {
+            if (updateSinglePurchaseRequest == null)
+            {
+                ModelState.AddModelError(nameof(updateSinglePurchaseRequest), $"{nameof(updateSinglePurchaseRequest)} cannot be null.");
+                return false;
+            }
+
+            if (updateSinglePurchaseRequest.Quantity < 1)
+            {
+                ModelState.AddModelError(nameof(updateSinglePurchaseRequest.Quantity), $"You have to put at least one book.");
+            }
+
+            if (await bookRepository.GetByIdAsync(updateSinglePurchaseRequest.BookId) == null)
+            {
+                ModelState.AddModelError(nameof(updateSinglePurchaseRequest.BookId), $"There is no book with this Id.");
+            }
+
+            if (await purchaseRepository.GetByIdAsync(updateSinglePurchaseRequest.PurchaseId) == null)
+            {
+                ModelState.AddModelError(nameof(updateSinglePurchaseRequest.PurchaseId), $"There is no purchase with this Id.");
+            }
+
+            if (ModelState.Count > 0)
             {
                 return false;
             }
