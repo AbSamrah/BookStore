@@ -48,10 +48,6 @@ namespace BookStore.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPurchaseAsync(models.DTO.AddPurchaseRequest addPurchaseRequest)
         {
-            if (!ValidateAddPurchaseAsync(addPurchaseRequest))
-            {
-                return BadRequest(ModelState);
-            }
 
             var purchase = new Purchase()
             {
@@ -86,10 +82,6 @@ namespace BookStore.API.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> UpdatePurchaseAsync([FromRoute] Guid id,[FromBody] models.DTO.UpdatePurchaseRequest updatePurchaseRequest)
         {
-            if (!ValidateUpdatePurchaseAsync(updatePurchaseRequest))
-            {
-                return BadRequest(ModelState);
-            }
             var purchase = new Purchase()
             {
                 PurchaseTime = updatePurchaseRequest.PurchaseTime,
@@ -105,40 +97,5 @@ namespace BookStore.API.Controllers
             return Ok(purchaseDTO);
         }
 
-
-        #region private methods
-        private bool ValidateAddPurchaseAsync(models.DTO.AddPurchaseRequest addPurchaseRequest)
-        {
-            if(addPurchaseRequest == null)
-            {
-                ModelState.AddModelError(nameof(addPurchaseRequest), $"{nameof(addPurchaseRequest)} cannot be null.");
-                return false;
-            }
-
-            if(addPurchaseRequest.PurchaseTime > DateTime.Now)
-            {
-                ModelState.AddModelError(nameof(addPurchaseRequest.PurchaseTime), $"{nameof(addPurchaseRequest.PurchaseTime)} cannot be after now.");
-                return false;
-            }
-            return true;
-        }
-
-        private bool ValidateUpdatePurchaseAsync(models.DTO.UpdatePurchaseRequest updatePurchaseRequest)
-        {
-            if (updatePurchaseRequest == null)
-            {
-                ModelState.AddModelError(nameof(updatePurchaseRequest), $"{nameof(updatePurchaseRequest)} cannot be null.");
-                return false;
-            }
-
-            if (updatePurchaseRequest.PurchaseTime > DateTime.Now)
-            {
-                ModelState.AddModelError(nameof(updatePurchaseRequest.PurchaseTime), $"{nameof(updatePurchaseRequest.PurchaseTime)} cannot be after now.");
-                return false;
-            }
-            return true;
-        }
-
-        #endregion
     }
 }
