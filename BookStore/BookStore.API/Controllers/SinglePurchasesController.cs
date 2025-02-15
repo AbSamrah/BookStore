@@ -12,11 +12,16 @@ namespace BookStore.API.Controllers
     {
         private readonly ISinglePurchaseRepository singlePurchaseRepository;
         private readonly IMapper mapper;
+        private readonly IPurchaseRepository purchaseRepository;
+        private readonly IBookRepository bookRepository;
 
-        public SinglePurchasesController(ISinglePurchaseRepository singlePurchaseRepository, IMapper mapper)
+        public SinglePurchasesController(ISinglePurchaseRepository singlePurchaseRepository, IMapper mapper,
+            IPurchaseRepository purchaseRepository, IBookRepository bookRepository)
         {
             this.singlePurchaseRepository = singlePurchaseRepository;
             this.mapper = mapper;
+            this.purchaseRepository = purchaseRepository;
+            this.bookRepository = bookRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllSinglePurchasesAsync()
@@ -93,5 +98,40 @@ namespace BookStore.API.Controllers
             return Ok(singlePurchaseDTO);
 
         }
+
+        #region private methods
+
+        private async Task<bool> ValidateAddSinglePurchaseAsync(models.DTO.AddSinglePurchaseRequest addSinglePurchaseRequest)
+        {
+            if (addSinglePurchaseRequest == null)
+            {
+                ModelState.AddModelError(nameof(addSinglePurchaseRequest), { $"{nameof(addSinglePurchaseRequest)} cannot be null."});
+                return false;
+            }
+
+            if(addSinglePurchaseRequest.Quantity < 1)
+            {
+                ModelState.AddModelError(nameof(addSinglePurchaseRequest.Quantity), $"You have to put at least one book.");
+            }
+
+            if(await bookRepository.GetByIdAsync(addSinglePurchaseRequest.BookId) == null)
+            {
+                ModelState.AddModelError(nameof(addSinglePurchaseRequest.BookId), $"There is no book with this Id.");
+            }
+
+            if(await purchaseRepository.GetByIdAsync(addSinglePurchaseRequest.PurchaseId) == null)
+            {
+                ModelState.AddModelError(nameof(addSinglePurchaseRequest.PurchaseId), $"There is no purchase with this Id.");
+            }
+
+            if(ModelState.Count > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
