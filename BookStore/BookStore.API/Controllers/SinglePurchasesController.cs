@@ -8,7 +8,7 @@ namespace BookStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SinglePurchasesController : ControllerBase
+    public class SinglePurchasesController : Controller
     {
         private readonly ISinglePurchaseRepository singlePurchaseRepository;
         private readonly IMapper mapper;

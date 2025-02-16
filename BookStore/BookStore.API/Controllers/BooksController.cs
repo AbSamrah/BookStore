@@ -8,7 +8,7 @@ namespace BookStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class BooksController : Controller
     {
         private IBookRepository bookRepository;
         private readonly IMapper mapper;
