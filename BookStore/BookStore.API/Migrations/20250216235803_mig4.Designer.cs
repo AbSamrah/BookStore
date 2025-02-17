@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore.API.Migrations
 {
     [DbContext(typeof(BookStoreDbContext))]
-    [Migration("20250213132959_New Migration")]
-    partial class NewMigration
+    [Migration("20250216235803_mig4")]
+    partial class mig4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,9 +55,27 @@ namespace BookStore.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("PurchaseTime")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Purchases");
+                });
+
+            modelBuilder.Entity("BookStore.API.models.Domain.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("BookStore.API.models.Domain.SinglePurchase", b =>
@@ -84,6 +102,58 @@ namespace BookStore.API.Migrations
                     b.ToTable("SinglePurchases");
                 });
 
+            modelBuilder.Entity("BookStore.API.models.Domain.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BookStore.API.models.Domain.UserRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRole");
+                });
+
             modelBuilder.Entity("BookStore.API.models.Domain.SinglePurchase", b =>
                 {
                     b.HasOne("BookStore.API.models.Domain.Book", "Book")
@@ -103,6 +173,25 @@ namespace BookStore.API.Migrations
                     b.Navigation("Purchase");
                 });
 
+            modelBuilder.Entity("BookStore.API.models.Domain.UserRole", b =>
+                {
+                    b.HasOne("BookStore.API.models.Domain.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookStore.API.models.Domain.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BookStore.API.models.Domain.Book", b =>
                 {
                     b.Navigation("singlePurchases");
@@ -111,6 +200,11 @@ namespace BookStore.API.Migrations
             modelBuilder.Entity("BookStore.API.models.Domain.Purchase", b =>
                 {
                     b.Navigation("SinglePurchases");
+                });
+
+            modelBuilder.Entity("BookStore.API.models.Domain.User", b =>
+                {
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

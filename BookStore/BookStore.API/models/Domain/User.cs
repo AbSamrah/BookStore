@@ -1,4 +1,6 @@
-﻿namespace BookStore.API.models.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BookStore.API.models.Domain
 {
     public class User
     {
@@ -8,6 +10,7 @@
         public String EmailAddress { get; set; }
         public String FirstName { get; set; }
         public String LastName { get; set; }
+        [NotMapped]
         public List<String> Roles { get; set; }
         public List<UserRole> UserRoles { get; set; }
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore.API.Migrations
 {
     [DbContext(typeof(BookStoreDbContext))]
-    [Migration("20250212191610_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250216235350_mig3")]
+    partial class mig3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,12 +44,7 @@ namespace BookStore.API.Migrations
                     b.Property<double>("PriceInSYR")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("PurchaseId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PurchaseId");
 
                     b.ToTable("Books");
                 });
@@ -60,21 +55,65 @@ namespace BookStore.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("PurchaseTime")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Purchases");
                 });
 
+            modelBuilder.Entity("BookStore.API.models.Domain.SinglePurchase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PurchaseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("PurchaseId");
+
+                    b.ToTable("SinglePurchases");
+                });
+
+            modelBuilder.Entity("BookStore.API.models.Domain.SinglePurchase", b =>
+                {
+                    b.HasOne("BookStore.API.models.Domain.Book", "Book")
+                        .WithMany("singlePurchases")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookStore.API.models.Domain.Purchase", "Purchase")
+                        .WithMany("SinglePurchases")
+                        .HasForeignKey("PurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Purchase");
+                });
+
             modelBuilder.Entity("BookStore.API.models.Domain.Book", b =>
                 {
-                    b.HasOne("BookStore.API.models.Domain.Purchase", null)
-                        .WithMany("Books")
-                        .HasForeignKey("PurchaseId");
+                    b.Navigation("singlePurchases");
                 });
 
             modelBuilder.Entity("BookStore.API.models.Domain.Purchase", b =>
                 {
-                    b.Navigation("Books");
+                    b.Navigation("SinglePurchases");
                 });
 #pragma warning restore 612, 618
         }

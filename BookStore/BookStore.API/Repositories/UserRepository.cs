@@ -1,14 +1,42 @@
-﻿using BookStore.API.models.Domain;
+﻿using BookStore.API.Data;
+using BookStore.API.models.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.API.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public List<User> Users;
+        private readonly BookStoreDbContext bookStoreDbContext;
+
+        public UserRepository(BookStoreDbContext bookStoreDbContext)
+        {
+            this.bookStoreDbContext = bookStoreDbContext;
+        }
 
         public async Task<User> AuthenticateAsync(string userName, string password)
         {
-            var user = Users.Find(x => x.UserName.Equals(userName, StringComparison.InvariantCultureIgnoreCase)&&x.Password==password);
+            var user = await bookStoreDbContext.Users.FirstOrDefaultAsync(x => x.UserName.ToLower() == userName.ToLower()&&x.Password==password);
+            if (user == null)
+            {
+                return null;
+            }
+
+            var userRoles = await bookStoreDbContext.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
+
+            if (userRoles.Any())
+            {
+                foreach(var userRole in userRoles)
+                {
+                    user.Roles = new List<string>();
+                    var role = await bookStoreDbContext.Roles.FirstOrDefaultAsync(x => x.Id == userRole.RoleId);
+                    if(role != null)
+                    {
+                        user.Roles.Add(role.Name);
+                    }
+                }
+
+            }
+            user.Password = null;
             return user;
         }
     }

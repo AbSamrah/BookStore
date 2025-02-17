@@ -5,21 +5,36 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookStore.API.Migrations
 {
-    public partial class NewMigration : Migration
+    public partial class mig3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Books_Purchases_PurchaseId",
-                table: "Books");
+            migrationBuilder.CreateTable(
+                name: "Books",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AuthorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PriceInSYR = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Books", x => x.Id);
+                });
 
-            migrationBuilder.DropIndex(
-                name: "IX_Books_PurchaseId",
-                table: "Books");
-
-            migrationBuilder.DropColumn(
-                name: "PurchaseId",
-                table: "Books");
+            migrationBuilder.CreateTable(
+                name: "Purchases",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PurchaseTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Purchases", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "SinglePurchases",
@@ -63,23 +78,11 @@ namespace BookStore.API.Migrations
             migrationBuilder.DropTable(
                 name: "SinglePurchases");
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "PurchaseId",
-                table: "Books",
-                type: "uniqueidentifier",
-                nullable: true);
+            migrationBuilder.DropTable(
+                name: "Books");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_PurchaseId",
-                table: "Books",
-                column: "PurchaseId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Books_Purchases_PurchaseId",
-                table: "Books",
-                column: "PurchaseId",
-                principalTable: "Purchases",
-                principalColumn: "Id");
+            migrationBuilder.DropTable(
+                name: "Purchases");
         }
     }
 }

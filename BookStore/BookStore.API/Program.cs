@@ -36,7 +36,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     });
 builder.Services.AddScoped<ITokenHandler, BookStore.API.Repositories.TokenHandler>();
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
