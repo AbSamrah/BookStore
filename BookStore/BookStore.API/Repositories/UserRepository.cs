@@ -25,9 +25,10 @@ namespace BookStore.API.Repositories
 
             if (userRoles.Any())
             {
+                user.Roles = new List<string>();
                 foreach(var userRole in userRoles)
                 {
-                    user.Roles = new List<string>();
+                    
                     var role = await bookStoreDbContext.Roles.FirstOrDefaultAsync(x => x.Id == userRole.RoleId);
                     if(role != null)
                     {

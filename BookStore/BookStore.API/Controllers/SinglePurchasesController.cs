@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using BookStore.API.Repositories;
 using AutoMapper;
 using BookStore.API.models.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStore.API.Controllers
 {
@@ -24,6 +25,7 @@ namespace BookStore.API.Controllers
             this.bookRepository = bookRepository;
         }
         [HttpGet]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllSinglePurchasesAsync()
         {
             var singlePurchases = await singlePurchaseRepository.GetAllAsync();
@@ -34,6 +36,7 @@ namespace BookStore.API.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetSinglePurchaseAsync(Guid id)
         {
             var singlePurchase = await singlePurchaseRepository.GetByIdAsync(id);
@@ -47,6 +50,7 @@ namespace BookStore.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> AddSinglePurchaseAsync(models.DTO.AddSinglePurchaseRequest addSinglePurchaseRequest)
         {
             if (!await ValidateAddSinglePurchaseAsync(addSinglePurchaseRequest))
@@ -69,6 +73,7 @@ namespace BookStore.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteSinglePurhaseAsync(Guid id)
         {
             var singlePurchase = await singlePurchaseRepository.DeleteAsync(id);
@@ -84,6 +89,7 @@ namespace BookStore.API.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> UpdateSinglePurchaseAsync(Guid id, models.DTO.UpdateSinglePurchaseRequest updateSinglePurchaseRequest)
         {
             if (!await ValidateUpdateSinglePurchaseAsync(updateSinglePurchaseRequest))

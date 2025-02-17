@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using BookStore.API.models.Domain;
 using BookStore.API.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStore.API.Controllers
 {
@@ -21,6 +22,7 @@ namespace BookStore.API.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllBooks()
         {
             var books = await bookRepository.GetAllAsync();
@@ -32,6 +34,7 @@ namespace BookStore.API.Controllers
         [HttpGet]
         [Route("{id:Guid}")]
         [ActionName("GetBookAsync")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetBookAsync(Guid id)
         {
             var book = await bookRepository.GetByIdAsync(id);
@@ -43,6 +46,7 @@ namespace BookStore.API.Controllers
             return Ok(bookDTO);
         }
         [HttpPost]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> AddBookAsync(models.DTO.AddBookRequest addBookRequest)
         {
 
@@ -70,6 +74,7 @@ namespace BookStore.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteBookAsync(Guid id)
         {
             var book = await bookRepository.DeleteAsync(id);
@@ -85,6 +90,7 @@ namespace BookStore.API.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> UpdateBookAsync([FromRoute] Guid id,[FromBody] models.DTO.UpdateBookRequest updateBookRequest)
         {
             var book = new models.Domain.Book()
