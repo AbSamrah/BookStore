@@ -4,6 +4,7 @@ using BookStore.API.models.Domain;
 using BookStore.API.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 
 namespace BookStore.API.Controllers
 {
@@ -13,19 +14,25 @@ namespace BookStore.API.Controllers
     {
         private IBookRepository bookRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<BooksController> logger;
 
-        public BooksController(IBookRepository bookRepository,IMapper mapper)
+        public BooksController(IBookRepository bookRepository, IMapper mapper , ILogger<BooksController> logger)
         {
             this.bookRepository = bookRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
 
         [HttpGet]
-        [Authorize(Roles = "reader")]
+        //[Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllBooks()
         {
+            logger.LogInformation("GetAllBooks Action Method was invoked");
+
             var books = await bookRepository.GetAllAsync();
+
+            logger.LogInformation($" Finished GetAllBooks request with data: {JsonSerializer.Serialize(books)}");
 
             var booksDTO = mapper.Map<List<models.DTO.Book>>(books);
             return Ok(booksDTO);

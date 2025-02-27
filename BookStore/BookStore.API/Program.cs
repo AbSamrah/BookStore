@@ -6,9 +6,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .MinimumLevel.Information()
+    .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 // Add services to the container.
 
 builder.Services.AddControllers();
