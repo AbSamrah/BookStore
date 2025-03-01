@@ -18,6 +18,7 @@
             <th>CreatedDate</th>
             <th>AuthorName</th>
             <th>PriceInSYR</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +30,10 @@
                 <td>@book.CreatedDate</td>
                 <td>@book.AuthorName</td>
                 <td>@book.PriceInSYR</td>
+                <td>
+                    <a asp-controller="Books" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-light">Edit</a>
+                </td>
+
             </tr>
 
         }
