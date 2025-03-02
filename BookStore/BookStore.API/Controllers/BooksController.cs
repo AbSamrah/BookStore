@@ -73,7 +73,8 @@ namespace BookStore.API.Controllers
                 Name = book.Name,
                 CreatedDate = book.CreatedDate,
                 AuthorName = book.AuthorName,
-                PriceInSYR = book.PriceInSYR
+                PriceInSYR = book.PriceInSYR,
+                Quantity = book.Quantity
             };
 
             return CreatedAtAction(nameof(GetBookAsync), new { id = bookDTO.Id }, bookDTO);
@@ -105,7 +106,8 @@ namespace BookStore.API.Controllers
                 Name = updateBookRequest.Name,
                 CreatedDate = updateBookRequest.CreatedDate,
                 AuthorName = updateBookRequest.AuthorName,
-                PriceInSYR = updateBookRequest.PriceInSYR
+                PriceInSYR = updateBookRequest.PriceInSYR,
+                Quantity = updateBookRequest.Quantity
             };
 
             book = await bookRepository.UpdateAsync(id, book);

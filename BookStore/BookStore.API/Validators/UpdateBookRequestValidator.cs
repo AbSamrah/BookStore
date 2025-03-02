@@ -10,6 +10,7 @@ namespace BookStore.API.Validators
             RuleFor(x => x.AuthorName).NotEmpty();
             RuleFor(x => x.PriceInSYR).GreaterThanOrEqualTo(0);
             RuleFor(x => x.CreatedDate).LessThanOrEqualTo(DateTime.Now);
+            RuleFor(x => x.Quantity).GreaterThanOrEqualTo(0);
         }
     }
 }

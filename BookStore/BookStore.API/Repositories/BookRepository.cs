@@ -50,6 +50,7 @@ namespace BookStore.API.Repositories
             existingBook.PriceInSYR = book.PriceInSYR;
             existingBook.CreatedDate = book.CreatedDate;
             existingBook.AuthorName = book.AuthorName;
+            existingBook.Quantity = book.Quantity;
 
             await bookStoreDbContext.SaveChangesAsync();
             return existingBook;
