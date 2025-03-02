@@ -28,6 +28,12 @@ namespace BookStore.API.Repositories
             await bookStoreDbContext.SaveChangesAsync();
             return book;
         }
+        public async void DeleteManyAsync(IEnumerable<Guid> ids)
+        {
+            var p = await bookStoreDbContext.BulkDelete
+            return ;
+        }
+
         public async Task<Book> DeleteAsync(Guid id)
         {
             var book = await bookStoreDbContext.Books.FirstOrDefaultAsync(x=>x.Id == id);

@@ -8,6 +8,7 @@ namespace BookStore.API.Repositories
         public Task<Book> GetByIdAsync(Guid id);
         public Task<Book> AddBookAsync(Book book);
         public Task<Book> DeleteAsync(Guid id);
+        public void DeleteManyAsync(IEnumerable<Guid> ids);
         public Task<Book> UpdateAsync(Guid id, Book book);
     }
 }
